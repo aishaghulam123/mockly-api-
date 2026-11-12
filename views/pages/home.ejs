@@ -1,0 +1,102 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<main>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <span class="pill">Free mock REST API</span>
+        <h1>Sample JSON data for testing, prototyping and learning.</h1>
+        <p class="lead">
+          Mockly API gives developers free sample data for posts, products, users and recipes.
+          Send a GET request, get JSON back, and focus on building your frontend.
+        </p>
+        <div class="button-row">
+          <a href="/docs" class="btn btn-primary">Explore Documentation</a>
+          <a href="/docs#posts" class="btn btn-secondary">View API Endpoints</a>
+        </div>
+      </div>
+
+      <div class="hero-code">
+        <div class="code-window">
+          <div class="code-window-bar"><span>JavaScript</span></div>
+<pre class="code-block"><code>fetch('/api/products/1')
+  .then(response =&gt; response.json())
+  .then(data =&gt; console.log(data));</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick start cards -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Quick start</h2>
+      <p class="section-subtitle">Pick a category and open its documentation.</p>
+
+      <div class="card-grid">
+        <% categories.forEach(function (category) { %>
+          <a href="/docs#<%= category.key %>" class="card card-link">
+            <div class="card-top">
+              <h3><%= category.name %> API</h3>
+              <span class="count-badge"><%= recordCounts[category.key] %> records</span>
+            </div>
+            <p><%= category.description %></p>
+            <code class="endpoint-chip">GET /api/<%= category.key %></code>
+            <span class="card-cta">View documentation &rarr;</span>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform statistics  -->
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Platform statistics</h2>
+      <div class="stats-grid">
+        <div class="stat">
+          <span class="stat-number"><%= stats.categoryCount %></span>
+          <span class="stat-label">API categories</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number"><%= stats.endpointCount %></span>
+          <span class="stat-label">GET endpoints</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number"><%= stats.totalRecords %></span>
+          <span class="stat-label">Sample records</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Getting started -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Getting started</h2>
+      <p class="section-subtitle">Three steps from zero to data.</p>
+
+      <div class="steps">
+        <div class="step">
+          <span class="step-number">1</span>
+          <h3>Choose an API endpoint</h3>
+          <p>Browse the documentation and pick a category such as posts or products.</p>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <h3>Send a GET request</h3>
+          <p>Use the Fetch API, or press the Try It button on any endpoint in the docs.</p>
+        </div>
+        <div class="step">
+          <span class="step-number">3</span>
+          <h3>Receive JSON data</h3>
+          <p>Get a clean JSON response you can display, filter and test with straight away.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,72 @@
+<%
+  // Expects: category, type ("list" or "single"), baseUrl
+  const isList = type === 'list';
+  const idPrefix = category.key + '-' + type;
+  const urlPath = isList ? '/' + category.key : '/' + category.key + '/:id';
+  const exampleUrl = baseUrl + '/' + category.key + (isList ? '' : '/' + category.exampleId);
+  const sample = isList ? category.listSample : category.singleSample;
+  const description = isList
+    ? 'Retrieve a paginated list of ' + category.key + '.'
+    : 'Retrieve a single ' + category.singular + ' using its ID.';
+%>
+<article class="endpoint" id="<%= idPrefix %>">
+  <div class="endpoint-head">
+    <span class="method-badge">GET</span>
+    <code class="endpoint-url">/api<%= urlPath %></code>
+    <button type="button" class="btn btn-small" data-copy-text="<%= exampleUrl %>">Copy endpoint</button>
+  </div>
+  <p class="endpoint-description"><%= description %></p>
+
+  <h4>JavaScript example</h4>
+  <div class="code-window">
+    <div class="code-window-bar">
+      <span>JavaScript</span>
+      <button type="button" class="copy-btn" data-copy-target="<%= idPrefix %>-code">Copy code</button>
+    </div>
+<pre class="code-block"><code id="<%= idPrefix %>-code">fetch('<%= exampleUrl %>')
+  .then(response => response.json())
+  .then(data => console.log(data));</code></pre>
+  </div>
+
+  <h4>Sample response</h4>
+  <div class="code-window">
+    <div class="code-window-bar">
+      <span>JSON<% if (isList) { %> &middot; limit=<%= sampleSize %> shown for brevity<% } %></span>
+      <button type="button" class="copy-btn" data-copy-target="<%= idPrefix %>-json">Copy JSON</button>
+    </div>
+<pre class="code-block scroll-y"><code class="json-block" id="<%= idPrefix %>-json"><%= JSON.stringify(sample, null, 2) %></code></pre>
+  </div>
+
+  <h4>Try it</h4>
+  <form class="try-form" data-type="<%= type %>" data-path="/api/<%= category.key %>">
+    <div class="try-inputs">
+      <% if (isList) { %>
+        <label>limit
+          <input type="number" name="limit" min="1" placeholder="10">
+        </label>
+        <label>skip
+          <input type="number" name="skip" min="0" placeholder="0">
+        </label>
+      <% } else { %>
+        <label>id
+          <input type="text" name="id" value="<%= category.exampleId %>" placeholder="1">
+        </label>
+      <% } %>
+      <button type="submit" class="btn btn-primary btn-small">Try It</button>
+    </div>
+
+    <div class="try-result" hidden>
+      <div class="try-meta">
+        <code class="try-request"></code>
+        <span class="status-badge"></span>
+      </div>
+      <div class="code-window">
+        <div class="code-window-bar">
+          <span>Live response</span>
+          <button type="button" class="copy-btn copy-result-btn">Copy JSON</button>
+        </div>
+        <pre class="code-block scroll-y"><code class="json-block try-output"></code></pre>
+      </div>
+    </div>
+  </form>
+</article>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #ffffff; --text: #1f2328; --muted: #656d76; --border: #d0d7de;
+      --key: #881391; --string: #1a1aa6; --number: #1c6b00; --boolean: #b4540a; --null: #6b6b6b;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1e1e1e; --text: #d4d4d4; --muted: #9a9a9a; --border: #3a3a3a;
+        --key: #e36eec; --string: #f29766; --number: #9980ff; --boolean: #7cc7ff; --null: #9a9a9a;
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .toolbar { position: sticky; top: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; padding: 8px 12px; background: var(--bg); border-bottom: 1px solid var(--border); }
+    .toolbar label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; font-family: system-ui, sans-serif; }
+    .meta { color: var(--muted); font-family: system-ui, sans-serif; }
+    .meta a { color: inherit; }
+    pre { margin: 0; padding: 12px; white-space: pre-wrap; word-break: break-word; }
+    pre.pretty { white-space: pre; word-break: normal; overflow-x: auto; }
+    .json-key { color: var(--key); }
+    .json-string { color: var(--string); }
+    .json-number { color: var(--number); }
+    .json-boolean { color: var(--boolean); }
+    .json-null { color: var(--null); }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <label><input type="checkbox" id="prettyPrint" checked> Pretty-print</label>
+    <span class="meta">GET <%= requestPath %> &middot; <%= statusCode %></span>
+    <span class="meta"><a href="<%= requestPath %><%= requestPath.includes('?') ? '&' : '?' %>format=json">Raw JSON</a> &middot; <a href="/docs">Docs</a></span>
+  </div>
+  <pre id="output"><%= rawJson %></pre>
+
+  <script>
+    (function () {
+      var output = document.getElementById("output");
+      var checkbox = document.getElementById("prettyPrint");
+      var rawText = output.textContent;
+      var prettyText = rawText;
+      try { prettyText = JSON.stringify(JSON.parse(rawText), null, 2); } catch (e) {}
+
+      function escapeHtml(text) {
+        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+
+      function highlight(text) {
+        var pattern = /("(?:\\.|[^\\"])*"(\s*:)?|\b(?:true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g;
+        return escapeHtml(text).replace(pattern, function (match, _all, colon) {
+          var cls = "json-number";
+          if (match.charAt(0) === '"') cls = colon ? "json-key" : "json-string";
+          else if (match === "true" || match === "false") cls = "json-boolean";
+          else if (match === "null") cls = "json-null";
+          return '<span class="' + cls + '">' + match + "</span>";
+        });
+      }
+
+      function render() {
+        if (checkbox.checked) {
+          output.className = "pretty";
+          output.innerHTML = highlight(prettyText);
+        } else {
+          output.className = "";
+          output.innerHTML = highlight(rawText);
+        }
+      }
+
+      checkbox.addEventListener("change", render);
+      render();
+    })();
+  </script>
+</body>
+</html>

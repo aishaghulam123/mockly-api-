@@ -1,0 +1,66 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<main>
+  <section class="page-header">
+    <div class="container">
+      <h1>About Mockly API</h1>
+      <p class="lead">A simple mock REST API built to make learning and testing with real-looking data easy.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <h2 class="section-title">What is Mockly API?</h2>
+      <p>
+        Mockly API is a free service that returns sample JSON data over simple GET requests.
+        It covers four categories (posts, products, users and recipes), so you can build and test
+        a frontend before a real backend exists.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Project purpose</h2>
+      <p class="section-subtitle">Mockly API provides mock JSON data for:</p>
+      <div class="card-grid">
+        <div class="card"><h3>Frontend development</h3><p>Build interfaces with realistic data before the backend is ready.</p></div>
+        <div class="card"><h3>API integration practice</h3><p>Practice connecting an application to an API and reading its responses.</p></div>
+        <div class="card"><h3>Learning Fetch API</h3><p>Try fetch requests against real endpoints and see the results instantly.</p></div>
+        <div class="card"><h3>Testing API responses</h3><p>Check loading states, errors and 404 handling with predictable data.</p></div>
+        <div class="card"><h3>Educational projects</h3><p>Use it in classes, assignments and demos without any setup or accounts.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <h2 class="section-title">Project architecture</h2>
+      <ol class="architecture-list">
+        <li><strong>Express</strong> handles incoming server requests.</li>
+        <li><strong>EJS</strong> renders the server-side pages.</li>
+        <li><strong>JSON files</strong> store the mock data.</li>
+        <li><strong>API routes</strong> return JSON responses.</li>
+        <li><strong>The Fetch API</strong> in the browser demonstrates API integration.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Technology stack</h2>
+      <div class="tech-list">
+        <span class="tech-chip">Node.js</span>
+        <span class="tech-chip">Express.js</span>
+        <span class="tech-chip">EJS</span>
+        <span class="tech-chip">HTML5</span>
+        <span class="tech-chip">CSS3</span>
+        <span class="tech-chip">Vanilla JavaScript</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<%- include('../partials/footer') %>

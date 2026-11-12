@@ -1,0 +1,132 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<main class="container docs-layout">
+
+  <!-- Sidebar -->
+  <aside class="docs-sidebar" id="docsSidebar">
+    <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-expanded="false" aria-controls="sidebarLinks">
+      <span>Documentation menu</span>
+      <span class="sidebar-toggle-icon">&#9662;</span>
+    </button>
+
+    <nav class="sidebar-links" id="sidebarLinks">
+      <p class="sidebar-heading">Getting started</p>
+      <a href="#introduction" data-section="introduction">Introduction</a>
+
+      <p class="sidebar-heading">API categories</p>
+      <% categories.forEach(function (category) { %>
+        <a href="#<%= category.key %>" data-section="<%= category.key %>"><%= category.name %></a>
+      <% }); %>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <div class="docs-content">
+
+    <!-- Introduction -->
+    <section class="docs-section" id="introduction">
+      <h1>Introduction</h1>
+      <p>
+        Mockly API is a free mock REST API. It returns sample JSON data for
+        <%= categories.length %> categories, with <%= stats.endpointCount %> GET endpoints
+        and <%= stats.totalRecords %> sample records in total. No sign-up or API key is needed.
+      </p>
+
+      <h3>Base URL</h3>
+      <p>All requests start with this base URL:</p>
+      <div class="code-window">
+        <div class="code-window-bar">
+          <span>Base URL</span>
+          <button type="button" class="copy-btn" data-copy-target="base-url">Copy</button>
+        </div>
+<pre class="code-block"><code id="base-url"><%= baseUrl %></code></pre>
+      </div>
+
+      <h3>Available categories</h3>
+      <ul class="plain-list">
+        <% categories.forEach(function (category) { %>
+          <li>
+            <a href="#<%= category.key %>"><strong><%= category.name %></strong></a>
+            &ndash; <%= category.total %> records. <%= category.description %>
+          </li>
+        <% }); %>
+      </ul>
+
+      <h3>Making a GET request</h3>
+      <p>Every endpoint uses the GET method. Call it with the Fetch API, then read the JSON from the response:</p>
+      <div class="code-window">
+        <div class="code-window-bar">
+          <span>JavaScript</span>
+          <button type="button" class="copy-btn" data-copy-target="intro-fetch">Copy code</button>
+        </div>
+<pre class="code-block"><code id="intro-fetch">fetch('<%= baseUrl %>/posts')
+  .then(response => response.json())
+  .then(data => console.log(data));</code></pre>
+      </div>
+
+      <h3 id="pagination">Pagination</h3>
+      <p>Every collection endpoint accepts two optional query parameters:</p>
+      <div class="table-wrap">
+        <table class="param-table">
+          <thead>
+            <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>limit</code></td><td>Number of records to return (maximum 100, never more than the dataset holds).</td><td>10</td></tr>
+            <tr><td><code>skip</code></td><td>Number of records to skip from the start of the list.</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Invalid values (like <code>limit=abc</code> or a negative <code>skip</code>) are ignored and the defaults are used.
+      </p>
+
+      <h4>Examples</h4>
+      <ul class="plain-list">
+        <li><code>GET /api/posts?limit=10&amp;skip=0</code> &ndash; the first 10 posts.</li>
+        <li><code>GET /api/posts?limit=10&amp;skip=10</code> &ndash; the next 10 posts (page 2).</li>
+        <li><code>GET /api/posts?limit=5</code> &ndash; the first 5 posts.</li>
+      </ul>
+
+      <h4>Response format</h4>
+      <p>Collection responses use the category name as the key, followed by the pagination details:</p>
+      <div class="code-window">
+        <div class="code-window-bar">
+          <span>JSON</span>
+          <button type="button" class="copy-btn" data-copy-target="pagination-format">Copy JSON</button>
+        </div>
+<pre class="code-block"><code class="json-block" id="pagination-format">{
+  "posts": [],
+  "total": <%= categories[0].total %>,
+  "skip": 0,
+  "limit": 10
+}</code></pre>
+      </div>
+      <p class="hint">The <code>posts</code> array holds the records. <code>total</code> is the number of records in the dataset.</p>
+
+      <h4>Errors</h4>
+      <p>Errors return a JSON message. An unknown ID returns 404 and an invalid ID (for example <code>/api/posts/abc</code>) returns 400.</p>
+      <div class="code-window">
+        <div class="code-window-bar"><span>404 Not Found</span></div>
+<pre class="code-block"><code class="json-block">{
+  "message": "Post with ID 999 not found"
+}</code></pre>
+      </div>
+    </section>
+
+   
+    <% categories.forEach(function (category) { %>
+      <section class="docs-section" id="<%= category.key %>">
+        <h2><%= category.name %></h2>
+        <p><%= category.description %> There are <%= category.total %> <%= category.key %> in the dataset.</p>
+
+        <%- include('../partials/endpoint', { category: category, type: 'list', baseUrl: baseUrl, sampleSize: sampleSize }) %>
+        <%- include('../partials/endpoint', { category: category, type: 'single', baseUrl: baseUrl, sampleSize: sampleSize }) %>
+      </section>
+    <% }); %>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
